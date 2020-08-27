@@ -92,24 +92,24 @@ class Business(Common, UrlMixin, MetaTagsMixin):
     def featured_image(self):
         return self.photos.all().first()
 
-    # @cached_property
-    # def closed_hours(self):
-    #     now = timezone.now()
-    #     closed_hours = self.opening_hours.all().filter(start__gte=now, end__lte=now, weekday=now.isoweekday)
-    #     return closed_hours
-    #
-    # @cached_property
-    # def closed_days(self):
-    #     now = timezone.now()
-    #     closed = self.opening_hours.all().filter(closed=True, weekday=now.isoweekday)
-    #     return closed
-    #
-    # @cached_property
-    # def is_closed_for_now(self):
-    #     cfn = self.closed_days or self.closed_hours
-    #     return cfn.count()
-    #
-    #
+    @cached_property
+    def closed_hours(self):
+        now = timezone.now()
+        closed_hours = self.opening_hours.all().filter(start__gte=now, end__lte=now, weekday=now.isoweekday)
+        return closed_hours
+    
+    @cached_property
+    def closed_days(self):
+        now = timezone.now()
+        closed = self.opening_hours.all().filter(closed=True, weekday=now.isoweekday)
+        return closed
+    
+    @cached_property
+    def is_closed_for_now(self):
+        cfn = self.closed_days or self.closed_hours
+        return cfn.count()
+    
+    
     def is_open(self):
         now = datetime.datetime.now()
         # for open in self.opening_hours.all().filter(start__lte=now, end__gte=now, weekday=now.isoweekday):
